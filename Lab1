@@ -1,0 +1,135 @@
+create table MUSICIAN(SSN varchar(15) primary key,Name varchar(25),Address varchar(225),Phone_Number bigint(15));
+
+create table INSTRUMENT(I_id varchar(15) primary key,I_name varchar(50),M_key varchar(50));
+
+create table ALBUM(A_id varchar(15) primary key,A_title varchar(100),Copyright_date date,Format varchar(15),SSN varchar(15),foreign key(ssn) references MUSICIAN(SSN),No_of_song integer);
+
+create table SONG(S_id varchar(15) primary key,S_title varchar(50),Author varchar(50),A_id varchar(15),foreign key(A_id) references ALBUM(A_id));
+
+create table PLAY(SSN varchar(15),I_id varchar(15),foreign key(SSN) references MUSICIAN(SSN),foreign key(I_id) references INSTRUMENT(I_id),primary key(SSN,I_id));
+
+create table PERFORM(SSN varchar(15),S_id varchar(15),foreign key(SSN) references MUSICIAN(SSN),foreign key(S_id) references SONG(S_id),primary key(SSN,S_id));
+
+
+
+
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M001','Mark','US',9972003141);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M002','Jack','US',9870053133);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M003','Jinny','UK',6875498233);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M004','Felina','UK',8830764536);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M005','Flesin','UK',9987605422);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M006','Joan','INDIA',8876584925);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M007','Andrea','INDIA',8875423215);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M008','Alice','INDIA',9975487654);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M009','Clevin','US',9977644092);
+insert into MUSICIAN(SSN,Name,Address,Phone_Number) values('M010','Joe','US',7882364092);
+
+
+
+insert into INSTRUMENT values('I001','Guitar','C');
+insert into INSTRUMENT values('I002','Piano','A');
+insert into INSTRUMENT values('I003','Flute','C');
+insert into INSTRUMENT values('I004','Drums','D');
+insert into INSTRUMENT values('I005','Tabla','E');
+insert into INSTRUMENT values('I006','Veena','B');
+insert into INSTRUMENT values('I007','Violin','C');
+insert into INSTRUMENT values('I008','Vocals','A');
+insert into INSTRUMENT values('I009','Electric-Guitar','D');
+insert into INSTRUMENT values('I010','Xiophone','D');
+
+
+
+insert into ALBUM values('A001','Children_Rhymes','1996-04-02','CD','M001',3);
+insert into ALBUM values('A002','Lulabies','1999-08-14','Cassette','M001',1);
+insert into ALBUM values('A003','Hope','1995-01-23','Tape','M003',2);
+insert into ALBUM values('A004','Dream','2000-07-04','CD','M004',10);
+insert into ALBUM values('A005','Morning Songs for Children','2003-02-27','MP3','M004',2);
+insert into ALBUM values('A006','Children Songs','2004-05-20','MP3','M005',3);
+insert into ALBUM values('A007','Hymn Book','2005-11-17','MC','M006',5);
+insert into ALBUM values('A008','Christmas Carols','2005-11-19','CD','M007',15);
+insert into ALBUM values('A009','Night Lulabies','2007-04-22','Tape','M009',6);
+insert into ALBUM values('A010','Rhymes','2009-08-01','Tape','M009',3);
+
+
+
+insert into SONG values('S001','BIts of paper','Mark','A001');
+insert into SONG values('S002','Twinkle twinkle little star','Jinny','A001');
+insert into SONG values('S003','London Bridge','Jinny','A001');
+insert into SONG values('S004','Good Morning','Jinny','A005');
+insert into SONG values('S005','Sleeping Beauty','Jinny','A002');
+insert into SONG values('S006','Hope for the best','Alice','A003');
+insert into SONG values('S007','Dream big','Joe','A004');
+insert into SONG values('S008','Christmas Song','Flesin','A008');
+insert into SONG values('S009','Christmas Eve','Flesin','A008');
+insert into SONG values('S010','Aim High','Andrea','A003');
+
+
+
+insert into PERFORM values('M001','S001');
+insert into PERFORM values('M003','S001');
+insert into PERFORM values('M005','S001');
+insert into PERFORM values('M008','S001');
+insert into PERFORM values('M001','S002');
+insert into PERFORM values('M003','S002');
+insert into PERFORM values('M001','S003');
+insert into PERFORM values('M008','S003');
+insert into PERFORM values('M001','S004');
+insert into PERFORM values('M005','S004');
+insert into PERFORM values('M007','S004');
+insert into PERFORM values('M008','S004');
+insert into PERFORM values('M003','S004');
+insert into PERFORM values('M003','S008');
+insert into PERFORM values('M003','S009');
+
+
+
+insert into PLAY values('M001','I001');
+insert into PLAY values('M002','I001');
+insert into PLAY values('M005','I001');
+insert into PLAY values('M006','I001');
+insert into PLAY values('M007','I001');
+insert into PLAY values('M010','I001');
+insert into PLAY values('M001','I002');
+insert into PLAY values('M010','I002');
+insert into PLAY values('M001','I003');
+insert into PLAY values('M006','I003');
+insert into PLAY values('M007','I003');
+insert into PLAY values('M010','I003');
+insert into PLAY values('M001','I004');
+insert into PLAY values('M001','I005');
+insert into PLAY values('M007','I006');
+insert into PLAY values('M001','I007');
+insert into PLAY values('M001','I008');
+insert into PLAY values('M001','I009');
+insert into PLAY values('M001','I006');
+insert into PLAY values('M001','I010');
+
+
+
+
+
+
+QUERY 1
+select M.Name,S.S_title,M.SSN,A.A_title from MUSICIAN M,ALBUM A,SONG S where M.SSN=A.SSN and A.A_id=S.A_id;
+
+
+QUERY 2
+select M.Name from MUSICIAN M where M.SSN not in(select A.SSN from ALBUM A);
+
+
+QUERY 3
+select S.*,count(P.S_id) from PERFORM P,SONG S WHERE S.S_id=P.S_id group by P.S_id having count(P.S_id)>3 ;
+
+
+QUERY 4
+select I.I_id,I.I_name,count(I.I_id),count(I.I_id)/(select count(*) from MUSICIAN) as Average
+from INSTRUMENT I,PLAY P where I.I_id=P.I_id group by I.I_id;
+
+
+QUERY 5
+select A.A_title from MUSICIAN M,INSTRUMENT I,PLAY P,ALBUM A where M.SSN=P.SSN AND I.I_id=P.I_id and A.SSN=M.SSN and I.I_name='Flute' and M.SSN in(select P.SSN from PLAY P,INSTRUMENT I where I.I_id=P.I_id and I.I_name='Guitar')and No_of_song>(select avg(No_of_song) from ALBUM);
+
+
+QUERY 6
+ SELECT * from MUSICIAN where SSN in(select SSN from PLAY group by SSN having COUNT(I_id)=(sele
+ct count(I_id) from INSTRUMENT));
